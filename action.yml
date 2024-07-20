@@ -7,8 +7,8 @@ inputs:
     default: "./kubeconfig"
   chart:
     description: "The chart to install"
-    required: true
-    default: "helm-example"
+    required: false
+    default: ""
   release:
     description: "The release name"
     required: true
@@ -36,16 +36,43 @@ inputs:
 runs:
   using: "docker"
   image: "Dockerfile"
-  args:
-    - ${{ inputs.command }}
-    - ${{ inputs.release }}
-    - ${{ inputs.chart }}
-    - --version
-    - ${{ inputs.version }}
-    - -n
-    - ${{ inputs.namespace }}
-    - --create-namespace
-    - -f
-    - ${{ inputs.values-file }}
-    - --kubeconfig
-    - ${{ inputs.kubeconfig }}
+  steps:
+    - name: "Installing Helm chart"
+      if: ${{ inputs.command == 'install' }}
+      args:
+        - ${{ inputs.command }}
+        - ${{ inputs.release }}
+        - ${{ inputs.chart }}
+        - --version
+        - ${{ inputs.version }}
+        - -n
+        - ${{ inputs.namespace }}
+        - --create-namespace
+        - -f
+        - ${{ inputs.values-file }}
+        - --kubeconfig
+        - ${{ inputs.kubeconfig }}
+    - name: "Upgrading Helm chart"
+      if: ${{ inputs.command == 'upgrade' }}
+      args:
+        - ${{ inputs.command }}
+        - ${{ inputs.release }}
+        - ${{ inputs.chart }}
+        - --version
+        - ${{ inputs.version }}
+        - -n
+        - ${{ inputs.namespace }}
+        - --create-namespace
+        - -f
+        - ${{ inputs.values-file }}
+        - --kubeconfig
+        - ${{ inputs.kubeconfig }}
+    - name: "Uninstalling Helm chart"
+      if: ${{ inputs.command == 'uninstall' }}
+      args:
+        - ${{ inputs.command }}
+        - ${{ inputs.release }}
+        - -n
+        - ${{ inputs.namespace }}
+        - --kubeconfig
+        - ${{ inputs.kubeconfig }}
