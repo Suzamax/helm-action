@@ -32,12 +32,11 @@ inputs:
   values:
     description: "Values for the Helm chart"
     required: false
-    default: "null"
+    default: ""
 runs:
   using: "docker"
   image: "Dockerfile"
   args:
-    - --kubeconfig ${{ inputs.kubeconfig }}
     - ${{ inputs.command }}
     - ${{ inputs.release }}
     - ${{ inputs.chart }}
@@ -45,4 +44,5 @@ runs:
     - -n ${{ inputs.namespace }}
     - --create-namespace
     - -f ${{ inputs.values-file }}
+    - --kubeconfig ${{ inputs.kubeconfig }}
     - ${{ inputs.values }}
