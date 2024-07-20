@@ -34,45 +34,36 @@ inputs:
     required: false
     default: ""
 runs:
-  using: "docker"
-  image: "Dockerfile"
+  using: "composite"
   steps:
-    - name: "Installing Helm chart"
-      if: ${{ inputs.command == 'install' }}
-      args:
-        - ${{ inputs.command }}
-        - ${{ inputs.release }}
-        - ${{ inputs.chart }}
-        - --version
-        - ${{ inputs.version }}
-        - -n
-        - ${{ inputs.namespace }}
-        - --create-namespace
-        - -f
-        - ${{ inputs.values-file }}
-        - --kubeconfig
-        - ${{ inputs.kubeconfig }}
-    - name: "Upgrading Helm chart"
-      if: ${{ inputs.command == 'upgrade' }}
-      args:
-        - ${{ inputs.command }}
-        - ${{ inputs.release }}
-        - ${{ inputs.chart }}
-        - --version
-        - ${{ inputs.version }}
-        - -n
-        - ${{ inputs.namespace }}
-        - --create-namespace
-        - -f
-        - ${{ inputs.values-file }}
-        - --kubeconfig
-        - ${{ inputs.kubeconfig }}
+    - name: "Build Docker image"
+      shell: sh
+      run: docker build -t helm-action .
+    - name: "Installing or upgrading Helm chart"
+      if: ${{ inputs.command == 'install' || inputs.command == 'upgrade' }}
+      shell: sh
+      run: |
+        docker run --rm -v $PWD:/wd helm-action \
+        ${{ inputs.command }} \
+        ${{ inputs.release }} \
+        ${{ inputs.chart }} \
+        --version \
+        ${{ inputs.version }} \
+        -n \
+        ${{ inputs.namespace }} \
+        --create-namespace \
+        -f \
+        ${{ inputs.values-file }} \
+        --kubeconfig \
+        ${{ inputs.kubeconfig }}
     - name: "Uninstalling Helm chart"
       if: ${{ inputs.command == 'uninstall' }}
-      args:
-        - ${{ inputs.command }}
-        - ${{ inputs.release }}
-        - -n
-        - ${{ inputs.namespace }}
-        - --kubeconfig
-        - ${{ inputs.kubeconfig }}
+      shell: sh
+      run: |
+        docker run --rm -v $PWD:/wd helm-action \
+        ${{ inputs.command }} \
+        ${{ inputs.release }} \
+        -n \
+        ${{ inputs.namespace }} \
+        --kubeconfig \
+        ${{ inputs.kubeconfig }}
