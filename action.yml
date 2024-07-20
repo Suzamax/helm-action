@@ -1,0 +1,43 @@
+name: "Helm Action"
+description: "Perform someting with Helm in the cluster"
+inputs:
+  kubeconfig:
+    description: "The path to the kubeconfig file"
+    required: true
+    default: "./kubeconfig"
+  chart:
+    description: "The chart to install"
+    required: true
+    default: "helm-example"
+  release:
+    description: "The release name"
+    required: true
+    default: "helm-example"
+  namespace:
+    description: "The namespace to install the chart"
+    required: true
+    default: "default"
+  command: # id of input
+    description: "Command for the Helm action"
+    required: true
+    default: "upgrade"
+  values-file:
+    description: "Values file for the Helm chart"
+    required: false
+    default: "null"
+  values:
+    description: "Values for the Helm chart"
+    required: false
+    default: "null"
+runs:
+  using: "docker"
+  image: "Dockerfile"
+  args:
+    - --kubeconfig ${{ inputs.kubeconfig }}
+    - ${{ inputs.command }}
+    - ${{ inputs.chart }}
+    - ${{ inputs.release }}
+    - -n ${{ inputs.namespace }}
+    - --create-namespace
+    - -f ${{ inputs.values-file }}
+    - ${{ inputs.values }}
