@@ -28,11 +28,11 @@ inputs:
   values-file:
     description: "Values file for the Helm chart"
     required: false
-    default: "null"
-  values:
-    description: "Values for the Helm chart"
-    required: false
-    default: ""
+    default: "Values.yaml"
+  # values:
+  #   description: "Values for the Helm chart"
+  #   required: false
+  #   default: ""
 runs:
   using: "docker"
   image: "Dockerfile"
@@ -49,4 +49,3 @@ runs:
     - ${{ inputs.values-file }}
     - --kubeconfig
     - ${{ inputs.kubeconfig }}
-    - ${{ inputs.values }}
