@@ -5,7 +5,7 @@ on:
 
 jobs:
   runner-job:
-    runs-on: gh-runner
+    runs-on: self-hosted
     steps:
       - name: "Checkout"
         uses: actions/checkout@v3
