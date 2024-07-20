@@ -1,4 +1,4 @@
-name: "Trying a workflow"
+name: "Uninstall Workflow"
 
 on:
   workflow_dispatch:
@@ -15,14 +15,10 @@ jobs:
           cat <<EOF > ./kubeconfig
           ${{ secrets.KUBECONFIG }}
           EOF
-      - name: "Install a Valkey chart"
+      - name: "Uninstall a Valkey chart"
         uses: ./
-        id: trial
+        id: uninstall
         with:
           kubeconfig: "./kubeconfig"
-          command: "install"
-          chart: "oci://registry-1.docker.io/bitnamicharts/valkey"
+          command: "uninstall"
           release: "valkey"
-          version: "0.3.10"
-          namespace: "default"
-          values-file: "./Values.yaml"
