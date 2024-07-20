@@ -13,6 +13,10 @@ inputs:
     description: "The release name"
     required: true
     default: "helm-example"
+  version:
+    description: "The chart version"
+    required: false
+    default: "null"
   namespace:
     description: "The namespace to install the chart"
     required: true
@@ -35,8 +39,9 @@ runs:
   args:
     - --kubeconfig ${{ inputs.kubeconfig }}
     - ${{ inputs.command }}
-    - ${{ inputs.chart }}
     - ${{ inputs.release }}
+    - ${{ inputs.chart }}
+    - --version ${{ inputs.version }}
     - -n ${{ inputs.namespace }}
     - --create-namespace
     - -f ${{ inputs.values-file }}
