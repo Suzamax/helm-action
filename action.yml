@@ -40,8 +40,12 @@ runs:
     - ${{ inputs.command }}
     - ${{ inputs.release }}
     - ${{ inputs.chart }}
-    - --version ${{ inputs.version }}
-    - -n ${{ inputs.namespace }}
+    - --version
+    - ${{ inputs.version }}
+    - -n
+    - ${{ inputs.namespace }}
     - --create-namespace
-    - -f ${{ inputs.values-file }}
-    - --kubeconfig ${{ inputs.kubeconfig }}
+    - -f
+    - ${{ inputs.values-file }}
+    - --kubeconfig
+    - ${{ inputs.kubeconfig }}
