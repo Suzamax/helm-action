@@ -16,7 +16,7 @@ inputs:
   version:
     description: "The chart version"
     required: false
-    default: "null"
+    default: ""
   namespace:
     description: "The namespace to install the chart"
     required: true
@@ -40,7 +40,7 @@ runs:
     - ${{ inputs.command }}
     - ${{ inputs.release }}
     - ${{ inputs.chart }}
-    - --version ${{ inputs.version }}
+    # - --version ${{ inputs.version }}
     - -n ${{ inputs.namespace }}
     - --create-namespace
     - -f ${{ inputs.values-file }}
